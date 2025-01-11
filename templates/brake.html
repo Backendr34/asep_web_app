@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Car Repair Help</title>
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+   <style>
+       body {
+           font-family: 'Roboto', sans-serif;
+           background-color: #f9f9f9;
+           color: #333;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           padding: 20px;
+           margin: 0;
+       }
+
+       header {
+           width: 100%;
+           background-color: #333;
+           color: white;
+           padding: 10px 20px;
+           text-align: center;
+           font-size: 24px;
+       }
+
+       .content {
+           max-width: 800px;
+           text-align: center;
+           margin-top: 20px;
+       }
+
+       .content h1 {
+           color: #2e7d32;
+           font-size: 28px;
+       }
+
+       .search-bar {
+           margin: 20px 0;
+           display: flex;
+           justify-content: center;
+       }
+
+       .search-bar input {
+           padding: 10px;
+           font-size: 16px;
+           border: 1px solid #ccc;
+           border-radius: 5px;
+           flex: 1;
+           max-width: 500px;
+       }
+
+       .search-bar button {
+           padding: 10px 20px;
+           margin-left: 5px;
+           font-size: 16px;
+           background-color: #4CAF50;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           cursor: pointer;
+       }
+
+       .search-bar button:hover {
+           background-color: #45a049;
+       }
+
+       .cards-container {
+           display: grid;
+           grid-template-columns: repeat(3, 200px);
+           row-gap: 100px;
+           column-gap: 60px;
+           justify-content: center;
+           margin-top: 30px;
+       }
+
+       .card {
+           padding: 20px;
+           border-radius: 10px;
+           background-color: white;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+           text-align: center;
+           cursor: pointer;
+           transition: transform 0.3s, box-shadow 0.3s;
+           box-sizing: border-box;
+           overflow: hidden;
+       }
+
+       .card select {
+           width: 100%;
+           max-width: 100%;
+           padding: 5px;
+           border: 1px solid #ccc;
+           border-radius: 5px;
+           box-sizing: border-box;
+       }
+
+       .card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+       }
+
+       .card h3 {
+           margin: 0;
+           color: #2e7d32;
+           font-size: 24px;
+       }
+
+       .popup {
+           display: none;
+           position: fixed;
+           left: 50%;
+           top: 50%;
+           transform: translate(-50%, -50%);
+           background-color: #fff;
+           padding: 20px;
+           border: 1px solid #ddd;
+           border-radius: 10px;
+           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+           z-index: 1000;
+           width: 300px;
+           text-align: center;
+       }
+
+       .popup h2 {
+           margin-top: 0;
+       }
+
+       .popup .close {
+           display: block;
+           text-align: right;
+           cursor: pointer;
+           color: #888;
+           font-size: 18px;
+       }
+
+       .popup .close:hover {
+           color: #555;
+       }
+
+       .overlay {
+           display: none;
+           position: fixed;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           background: rgba(0, 0, 0, 0.5);
+           z-index: 999;
+       }
+
+       footer {
+           width: 100%;
+           background-color: #333;
+           color: white;
+           padding: 20px 0;
+           margin-top: 40px;
+       }
+
+       .footer-container {
+           display: flex;
+           justify-content: space-around;
+           max-width: 1200px;
+           margin: 0 auto;
+           text-align: left;
+       }
+
+       .footer-section {
+           width: 30%;
+           padding: 0 15px;
+       }
+
+       .footer-section h3 {
+           margin-top: 0;
+           margin-bottom: 10px;
+           color: #f1f1f1;
+           font-size: 20px;
+       }
+
+       .footer-section p {
+           margin: 5px 0;
+           font-size: 14px;
+           color: #ccc;
+       }
+
+       @media (max-width: 768px) {
+           .footer-container {
+               flex-direction: column;
+               text-align: center;
+           }
+
+           .footer-section {
+               width: 100%;
+               margin-bottom: 20px;
+           }
+       }
+       /* Help Button Styles */
+       .help-button {
+           position: fixed;
+           bottom: 20px;
+           right: 20px;
+           background-color: #4CAF50;
+           color: white;
+           padding: 15px 20px;
+           font-size: 16px;
+           border: none;
+           border-radius: 50px;
+           cursor: pointer;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+           transition: background-color 0.3s, transform 0.3s;
+       }
+
+       .help-button:hover {
+           background-color: #45a049;
+           transform: scale(1.05);
+       }
+   </style>
+</head>
+<body>
+
+<header>
+   <h1>Car Repair Assistance</h1>
+</header>
+
+<div class="content">
+   <h1>BRAKES SYSTEMS</h1>
+   <p>LEARN HOW TO MAINTAIN AND REPAIR YOUR BRAKES.</p>
+
+   <div class="search-bar">
+       <input type="text" id="searchInput" placeholder="Search your problem...">
+       <button onclick="searchProblems()">Search</button>
+   </div>
+
+   <div class="cards-container">
+       <div class="card">
+           <h3>1</h3>
+           <p>BRAKE PAD WEAR</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="A">VIBRATION</option>
+               <option value="B">VISIBLE WEAR</option>
+               <option value="C">EXTENTAD STOPPING DISTANCE.</option>
+           </select>
+       </div>
+       <div class="card">
+           <h3>2</h3>
+           <p>BRAKES OVERHEATING</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="D">AGGRESSIVE BRAKING</option>
+               <option value="E">POOR QUALITY PARTS</option>
+               <option value="F">LACKA OF MAINTENANCE</option>
+           </select>
+       </div>
+       <div class="card">
+           <h3>3</h3>
+           <p>BRAKES FLUID LEAKS</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="G">DAMANE BRAKES LINE</option>
+               <option value="H">WARN BRAKES FUILDS RESERVOIR</option>
+               <option value="I">LEAKING BRAKES CAPILLARY</option>
+           </select>
+       </div>
+       <div class="card">
+           <h3>4</h3>
+           <p>BRAKES WARMING LIGHT</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="J">CHEAK THE PARKING BRAKES</option>
+               <option value="K">CHECK THE BRAKE FLUID</option>
+               <option value="L">CHECK THE BRAKES LIGHT BULB</option>
+           </select>
+       </div>
+       <div class="card">
+           <h3>5</h3>
+           <p>STUCK BRAKES PADS</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="M">WORN-OUT BRAKE PADS</option>
+               <option value="N">HYDRAULIC SYSTEMS ISSUES</option>
+               <option value="O">OVERHEADING BRAKING SYSTEM</option>
+           </select>
+       </div>
+       <div class="card">
+           <h3>6</h3>
+           <p>WORN OR DAMAGE BRAKES DISCS</p>
+           <select onchange="optionClicked(this.value)">
+               <option value="" selected disabled>Select Option</option>
+               <option value="P">LOSS OF BRAKES EFFIENENCY</option>
+               <option value="Q">EXCESSIVE VIBRATION</option>
+               <option value="R">WARM SURFACE</option>
+           </select>
+       </div>
+   </div>
+</div>
+
+<footer>
+   <div class="footer-container">
+       <div class="footer-section">
+           <h3>About Us</h3>
+           <p>We are committed to helping you solve car-related problems efficiently and affordably.</p>
+       </div>
+       <div class="footer-section">
+           <h3>Help</h3>
+           <p>Need assistance? Browse our FAQs or contact support for more information.</p>
+       </div>
+       <div class="footer-section">
+           <h3>Contact</h3>
+           <p>Email: support@carrepairhelp.com</p>
+           <p>Phone: +123 456 7890</p>
+       </div>
+   </div>
+</footer>
+<!-- Popups and Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Popups for different options -->
+<div class="popup" id="popupA">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>VIBRATION </h2>
+   <p> A VIBRATION BRAKES PEDAL.</p>
+</div>
+
+<div class="popup" id="popupB">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>VISIBLE WEAR</h2>
+   <p> You can visually inspect your brake pads to check their condition. </p>
+</div>
+<div class="popup" id="popupC">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>EXTENTAD STOPPING DISTANCE.</h2>
+   <p>Worn brake pads can make it take longer to stop your car. </p>
+</div>
+<div class="popup" id="popupD">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Aggressive braking</h2>
+   <p>Heavy braking without enough time to cool down can lead to brake overheating.  </p>
+</div>
+<div class="popup" id="popupE">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Poor quality parts</h2>
+   <p>Low-quality or worn brake pads and rotors can cause brakes to overheat.</p>
+</div>
+<div class="popup" id="popupF">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h>Lack of maintenance</h2>
+   <p>A lack of proper vehicle maintenance can contribute to brake overheating. </p>
+</div>
+<div class="popup" id="popupG">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Damaged brake lines:</h2>
+   <p> Road debris, corrosion, and vibrations can cause brake lines to develop cracks and tears. </p>
+</div>
+<div class="popup" id="popupH">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Worn brake fluid reservoir  </h2>
+   <p>A worn out or damaged reservoir, or a cap that isn't properly sealed, can cause brake fluid leaks. </p>
+</div>
+<div class="popup" id="popupI">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Leaking brake calipers</h2>
+   <p> Loose, damaged, or corroded brake calipers can leak brake fluid. </p>
+</div>
+<div class="popup" id="popupJ">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Uneven braking</h2>
+   <p>Your car may pull to one side when you brake</p>
+</div>
+<div class="popup" id="popupK">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Excessive vibration </h2>
+   <p>The surface of the discs may not be smooth, or they may be cracked or warped. </p>
+</div>
+<div class="popup" id="popupL">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>Loss of braking efficiency </h2>
+   <p>Your car may take longer to stop or you may need to apply more force to the brake pedal. </p>
+</div>
+<div class="popup" id="popupM">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK CLUTCH DISC</h2>
+   <p>CHEAK YOUR CLUTCH DISC IF IT IS DAMAGED CHANGE IT </p>
+</div>
+<div class="popup" id="popupN">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK BEARING </h2>
+   <p>MAKE SURE BEARING HAVE PROPER LUBRICANT AS TOO MUCH OR TOOL LITTELE CAN BOTH LEAD TO PROBLES</p>
+</div>
+<div class="popup" id="popupO">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK PRESSURE PLATE </h2>
+   <p>CHEAK PRESSURE PLATE IS BROKEN OR OVERHEATING </p>
+</div>
+<div class="popup" id="popupP">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK AIR FILTER</h2>
+   <p>CLEAN YOUR AIR FILTER </p>
+</div>
+<div class="popup" id="popupQ">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK FUEL SYSTEM </h2>
+   <p>CHECK YOUR FUEL SYSTEM IS LEAKED IF ITS REPAIR IT </p>
+</div>
+<div class="popup" id="popupR">
+   <span class="close" onclick="closePopup()">&times;</span>
+   <h2>CHECK TIMING BELT </h2>
+   <p>CHECK YOUR BELT IS CRACKED OR DAMAGED </p>
+</div>
+<!-- Help Button -->
+<button class="help-button" onclick="openHelpPage()">Need More Help?</button>
+
+<script>
+   
+   function optionClicked(option) {
+       document.querySelectorAll(".popup").forEach(popup => popup.style.display = "none");
+       const popup = document.getElementById(`popup${option}`);
+       if (popup) {
+           popup.style.display = "block";
+           document.getElementById("overlay").style.display = "block";
+       }
+   }
+   
+   function closePopup() {
+       document.querySelectorAll(".popup").forEach(popup => popup.style.display = "none");
+       document.getElementById("overlay").style.display = "none";
+   }
+   
+   // Search Functionality
+   function searchProblems() {
+       const input = document.getElementById("searchInput").value.toLowerCase();
+       const cards = document.querySelectorAll(".card");
+   
+       cards.forEach(card => {
+           const cardText = card.querySelector("p").textContent.toLowerCase();
+           card.style.display = cardText.includes(input) ? "block" : "none";
+       });
+   }
+   
+
+function openHelpPage() {
+   window.location.href = "query.html";  // Redirect to the query page
+}
+
+function searchProblems() {
+   const input = document.getElementById("searchInput").value.toLowerCase();
+   alert(`Searching for: ${input}`);
+}
+function optionClicked(option) {
+   document.querySelectorAll(".popup").forEach(popup => popup.style.display = "none");
+   const popup = document.getElementById(`popup${option}`);
+   if (popup) {
+       popup.style.display = "block";
+       document.getElementById("overlay").style.display = "block";
+   }
+}
+
+function closePopup() {
+   document.querySelectorAll(".popup").forEach(popup => popup.style.display = "none");
+   document.getElementById("overlay").style.display = "none";
+}
+
+// Search Functionality
+function searchProblems() {
+   const input = document.getElementById("searchInput").value.toLowerCase();
+   const cards = document.querySelectorAll(".card");
+
+   cards.forEach(card => {
+       const cardText = card.querySelector("p").textContent.toLowerCase();
+       card.style.display = cardText.includes(input) ? "block" : "none";
+   });
+}
+</script>
+
+</body>
+</html>
+

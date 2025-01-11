@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Are You Looking For?</title>
+    <style>
+        body {
+            background: #77797c;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #575757;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            margin-right: 0.5rem;
+        }
+
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            left: var(--bubble-left-offset);
+            bottom: -75%;
+            display: block;
+            width: var(--bubble-radius);
+            height: var(--bubble-radius);
+            border-radius: 50%;
+            background: hsla(183, 94%, 76%, 0.5);
+            animation: float-up var(--bubble-float-duration) var(--bubble-float-delay) ease-in infinite;
+        }
+
+        @keyframes float-up {
+            to {
+                transform: translateY(-175vh);
+            }
+        }
+
+        @keyframes sway-left-to-right {
+            from {
+                transform: translateX(-50%);
+            }
+
+            to {
+                transform: translateX(50%);
+            }
+        }
+
+        .bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: inherit;
+            animation: sway-left-to-right 4s ease-in-out alternate infinite;
+        }
+
+        .bubble:nth-child(1) { --bubble-left-offset: 10vw; --bubble-radius: 2vw; --bubble-float-duration: 8s; --bubble-float-delay: 1s; }
+        .bubble:nth-child(2) { --bubble-left-offset: 30vw; --bubble-radius: 4vw; --bubble-float-duration: 10s; --bubble-float-delay: 2s; }
+        .bubble:nth-child(3) { --bubble-left-offset: 50vw; --bubble-radius: 3vw; --bubble-float-duration: 12s; --bubble-float-delay: 3s; }
+        .bubble:nth-child(4) { --bubble-left-offset: 70vw; --bubble-radius: 5vw; --bubble-float-duration: 11s; --bubble-float-delay: 4s; }
+        .bubble:nth-child(5) { --bubble-left-offset: 90vw; --bubble-radius: 6vw; --bubble-float-duration: 9s; --bubble-float-delay: 0s; }
+
+        .container {
+            text-align: center;
+            padding: 2rem 0;
+            flex: 1;
+        }
+
+        .component {
+            flex: 1;
+            margin: 0.5rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .component:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .component a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-bar {
+            margin: 2rem 0;
+        }
+
+        .search-bar select,
+        .search-bar input[type="text"],
+        .search-bar input[type="submit"] {
+            padding: 0.75rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input[type="text"] {
+            width: 300px;
+        }
+
+        .search-bar input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        footer h2 {
+            color: #4CAF50;
+            margin-bottom: 0.5rem;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .footer-section {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome</h1>
+     <a href="{{ url_for('signup') }}">Sign Up</a>
+      <a href="{{ url_for('issue') }}">Submit Issue </a> 
+
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    
+
+    <div class="navbar">
+        <div class="profile">
+            <img src="https://www.mygov.in/sites/all/themes/mygov/images/profile-default.svg" alt="Profile Picture">
+            <a href="#">Profile</a>
+        </div>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <div class="container">
+        <h1 style="color: #4CAF50;">What Are You Looking For?</h1>
+        <p>Your go-to place for car repair and maintenance advice.</p>
+
+        <div class="search-bar">
+            <select>
+                <option disabled selected>Choose Car</option>
+                <option value="car1">Suzuki</option>
+                <option value="car2">Honda</option>
+                <option value="car3">Hier</option>
+            </select>
+            <input type="text" placeholder="Search your problem...">
+            <input type="submit" value="Search">
+        </div>
+
+
+       <div class="key-components" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+    <div class="component" style="flex-basis: 250px;">
+        <h2><a href="http://127.0.0.1:5000/engine">Engine Repair</a></h2>
+        <p>Expert advice on fixing engine problems.</p>
+    </div>
+    <div class="component" style="flex-basis: 250px;">
+        <h2><a href="http://127.0.0.1:5000/brake">Brake Systems</a></h2>
+        <p>Learn how to maintain and repair your brakes.</p>
+    </div>
+    <div class="component" style="flex-basis: 250px;">
+        <h2><a href="http://127.0.0.1:5000/trans">Transmission</a></h2>
+        <p>Tips on keeping your transmission running smoothly.</p>
+    </div>
+</div>
+    
+
+
+       <footer style="position: absolute; bottom: 0; width: 100%; background-color: #333; color: white; padding: 1rem 0; text-align: center; display: flex; justify-content: center; gap: 2rem;">
+    <div class="footer-section" style="flex: 1;">
+        <h2 style="color: #4CAF50;">About Us</h2>
+        <p>We provide top-notch car maintenance and repair advice.</p>
+    </div>
+
+    <div class="footer-section" style="flex: 1;">
+        <h2 style="color: #4CAF50;">Contact</h2>
+        <p>Reach out to us with your questions. We're here to help!</p>
+    </div>
+
+    <div class="footer-section" style="flex: 1;">
+        <h2 style="color: #4CAF50;">Help</h2>
+        <p>Visit our help section for FAQs, tutorials, and guides.</p>
+    </div>
+</footer>
+    </div>
+</body>
+</html>
